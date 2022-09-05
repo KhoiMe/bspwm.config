@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+## Copyright (C) 2020-2022 Aditya Shakya <adi1090x@gmail.com>
+## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
+
+## Environtment
+export PATH="${PATH}:$HOME/.config/bspwm/bin"
+
+## Java Applications
+wmname LG3D
+export _JAVA_AWT_WM_NONREPARENTING=1
+workspaces() {
+	name=1
+	for monitor in `bspc query -M`; do
+		bspc monitor ${monitor} -n "$name" -d 'I' 'II' 'III' 'IV' 'V' 'VI' 'VII' 'VIII'
+		# bspc monitor ${monitor} -n "$name" -d '' '' '' '' '' '' '' ''
+		let name++
+	done
+}
+workspaces
+
+bspc config border_width 1
+bspc config window_gap 4
+bspc config split_ratio 0.50
+
+# bspc config borderless_monocle true
+bspc config gapless_monocle true
+bspc config paddingless_monocle true
+bspc config single_monocle false
+
+# Fix cursor
+xsetroot -cursor_name left_ptr
+
+# Kill if already running
+killall -9 xsettingsd sxhkd dunst ksuperkey xfce4-power-manager
+
+# Lauch xsettingsd daemon
+xsettingsd &
+
+# polkit agent
+if [[ ! `pidof xfce-polkit` ]]; then
+	/usr/lib/xfce-polkit/xfce-polkit &
+fi
+
+# Lauch keybindings daemon
+sxhkd &
+
+# Enable Super Keys For Menu
+ksuperkey -e 'Super_L=Alt_L|F1' &
+ksuperkey -e 'Super_R=Alt_L|F1' &
+
+# Enable power management
+xfce4-power-manager &
+
+# Fix cursor
+xsetroot -cursor_name left_ptr
+
+# Restore wallpaper
+ feh --bg-scale ~/Downloads/pexels-cátia-matos-1072179.jpg
+
+polybar -c ~/.config/bspwm/polybar/config.ini -rq fluffy &
+# Start mpd
+# exec mpd &
+
+pulseaudio --kill
+pulseaudio --start
+
+# Start bspwm scripts
+# bspcolors
+# bspbar
+bspcomp
+bspdunst
+bspfloat &
