@@ -56,7 +56,7 @@ xfce4-power-manager &
 xsetroot -cursor_name left_ptr
 
 # Restore wallpaper
- feh --bg-scale ~/Downloads/pexels-cátia-matos-1072179.jpg
+ feh --bg-scale ~/Downloads/cristina-gottardi-CSpjU6hYo_0-unsplash.jpg
 
 polybar -c ~/.config/bspwm/polybar/config.ini -rq fluffy &
 # Start mpd
